@@ -8,8 +8,7 @@
 <title>Baby's Block Blast</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧸</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Modak&display=swap" rel="stylesheet">
-<style>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet"><style>
 :root{
   /* page + surfaces */
   --bg:#7185a8; --glow1:#7185a8; --glow2:#7185a8; --card:#e7f1f9;
@@ -88,6 +87,64 @@ body{
 @keyframes pop{0%{transform:scale(1)}40%{transform:scale(1.18);filter:brightness(1.2)}100%{transform:scale(0);opacity:0}}
 @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
 @keyframes toast{0%{opacity:0;transform:translate(-50%,-30%) scale(.8)}15%{opacity:1;transform:translate(-50%,-50%) scale(1.06)}25%{transform:translate(-50%,-50%) scale(1)}80%{opacity:1}100%{opacity:0;transform:translate(-50%,-90%) scale(1)}}
+
+/* ===== ARCADE / PAC-MAN THEME ===== */
+:root{
+  --bg:#000; --glow1:#0b0b3b; --glow2:#1a0638; --card:#000;
+  --ink:#ffffff; --soft:#c9ceff;
+  --board:#000; --cell:#07071f; --wall:#2121de;
+  --pink:#ffe600; --pink-dark:#e0201f;
+  --accent:#ffe600; --accent-dark:#a89400;
+  --c1:#ff3b3b; --c2:#ffe600; --c3:#00e5ff; --c4:#ff9ee6; --c5:#ffa43a; --c6:#39ff6a;
+  --font-title:'Press Start 2P',monospace;
+  --font-body:'VT323',monospace;
+}
+body{font-size:20px}
+
+/* titles: yellow pixel text with a red drop shadow */
+.title{font-size:16px;line-height:1.5;letter-spacing:0}
+.title .emo{font-size:0}
+.title .emo::before{content:'👻';font-size:18px}
+.card .big{font-size:24px;line-height:1.5;margin:4px 0 12px}
+.card .hb{font-size:11px;line-height:1.7;margin:0 0 14px}
+.bub,.card h2,.stat b{-webkit-text-stroke:0;paint-order:normal;color:var(--pink);text-shadow:.09em .09em 0 var(--pink-dark)}
+.bub{transform:none}
+.card h2{font-size:16px;line-height:1.5;letter-spacing:0}
+.stat b{font-size:18px;line-height:1.3}
+
+/* score boxes + sound button */
+.stat{background:#000;border:3px solid var(--wall);border-radius:6px;box-shadow:0 0 10px rgba(33,33,222,.7);padding:6px 10px}
+.stat small{font-family:var(--font-title);font-size:9px;letter-spacing:0;color:#fff;margin-bottom:4px}
+#mute{background:#000;border:3px solid var(--wall);border-radius:6px;box-shadow:0 0 10px rgba(33,33,222,.7)}
+
+/* the board = the maze, empty squares = pellets */
+#board{background:#000;border:4px solid var(--wall);border-radius:14px;gap:3px;box-shadow:0 0 0 2px #000,0 0 0 4px var(--wall),0 0 22px rgba(33,33,222,.9),inset 0 0 14px rgba(33,33,222,.45)}
+.cell:not(.filled):not(.ghost){border-radius:4px;box-shadow:none;background:radial-gradient(circle,#ffb8ae 2.5px,transparent 3px),var(--cell)}
+.cell.filled,.cell.ghost,.blk{border-radius:4px;box-shadow:inset 0 0 0 2px rgba(255,255,255,.3),inset 0 -4px 0 rgba(0,0,0,.28),inset 0 3px 0 rgba(255,255,255,.4)}
+.slot{background:rgba(33,33,222,.12);border:2px dashed var(--wall);border-radius:8px;box-shadow:none}
+
+/* compliment pop-up */
+#toast{background:#000;color:var(--pink);border:3px solid var(--wall);border-radius:6px;box-shadow:0 0 12px rgba(33,33,222,.8);font-family:var(--font-body);font-size:22px;font-weight:400;padding:6px 16px}
+
+/* pop-up cards, start screen, buttons */
+.overlay{background:rgba(0,0,0,.78);backdrop-filter:none;-webkit-backdrop-filter:none}
+.card{background:#000;border:4px solid var(--wall);border-radius:12px;box-shadow:0 0 0 2px #000,0 0 0 4px var(--wall),0 0 24px rgba(33,33,222,.8)}
+.card p{font-size:22px;line-height:1.15;color:var(--soft)}
+.btn{font-family:var(--font-title);font-size:12px;font-weight:400;letter-spacing:1px;color:#000;border-radius:6px;padding:14px 20px;box-shadow:0 5px 0 var(--accent-dark)}
+.intro-ph{border-color:var(--pink);background:rgba(255,230,0,.08)}
+
+/* Pac-Man chasing the ghosts on the start screen */
+.deco{align-items:center}
+.deco i{border-radius:14px 14px 3px 3px}
+.deco::before{content:'';flex:none;width:30px;height:30px;border-radius:50%;background:#ffe600;animation:chomp .35s steps(2) infinite alternate}
+@keyframes chomp{
+  from{clip-path:polygon(100% 74%,50% 50%,100% 24%,100% 0,0 0,0 100%,100% 100%)}
+  to{clip-path:polygon(100% 50%,50% 50%,100% 50%,100% 0,0 0,0 100%,100% 100%)}
+}
+
+/* faint CRT scanlines over everything */
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:70;background:repeating-linear-gradient(0deg,rgba(0,0,0,.16) 0,rgba(0,0,0,.16) 1px,transparent 1px,transparent 3px)}
+
 </style>
 </head>
 <body>
@@ -109,9 +166,9 @@ body{
     <h1 class="title big"><span class="wob">Baby's Block Blast</span></h1>
     <p class="hb"><span class="wob" id="introHello"></span> </p>
     <img id="introImg" class="intro-img hidden" alt="">
-    <div id="introPh" class="intro-ph"><b></b>"images/yacipupu gummy blue.png"</div>
+    <div id="introPh" class="intro-ph"><b>📸</b>your photo goes here</div>
     <p id="introNote"></p>
-    <button class="btn" id="playBtn">Play 🧸</button>
+    <button class="btn" id="playBtn">Press Start ▶</button>
   </div>
 </div>
 
@@ -140,12 +197,12 @@ const CONFIG = {
   name: 'asyran my love',
   // Photo on the start screen. Put the picture in the repo (e.g. a photos/ folder) and set its path, like 'photos/us.jpg'.
   // Leave it '' to show a dashed "your photo goes here" box instead.
-  introImage: '',
+  introImage: 'images/yacipupu-blue.png',
   introNote: "I made you a little game, because you deserve something as fun as you are 🤍",
   milestones: [
-    { score: 100, emoji: '📸', title: 'Memory #1', text: 'Placeholder: the day we met.\nReplace this with a real memory (and add a photo!).', image: '' },
-    { score: 250, emoji: '🍜', title: 'Memory #2', text: 'Placeholder: our first date.\nWrite something sweet here.', image: '' },
-    { score: 400, emoji: '🧸', title: 'Memory #3', text: 'Placeholder: our favorite inside joke.', image: '' }
+    { score: 100, emoji: '👻', title: 'Memory #1', text: 'Placeholder: the day we met.\nReplace this with a real memory (and add a photo!).', image: '' },
+    { score: 250, emoji: '🍒', title: 'Memory #2', text: 'Placeholder: our first date.\nWrite something sweet here.', image: '' },
+    { score: 400, emoji: '🕹️', title: 'Memory #3', text: 'Placeholder: our favorite inside joke.', image: '' }
   ],
   surprise: {
     score: 600, emoji: '🎂', title: 'Happy Birthday!!',
@@ -161,7 +218,7 @@ const CONFIG = {
 
 /* ---------------- setup ---------------- */
 const N = 8;
-const COLORS = ['#d98c6b', '#e6b85c', '#9db38a', '#d9a0a0', '#b6a1c8', '#8eb4c0', '#ff8ec7'];
+const COLORS = ['#ff3b3b', '#ffe600', '#00e5ff', '#ff9ee6', '#ffa43a', '#39ff6a'];
 const $ = s => document.querySelector(s);
 const boardEl = $('#board'), trayEl = $('#tray'), toastEl = $('#toast');
 const slots = [...trayEl.children];
