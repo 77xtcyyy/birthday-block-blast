@@ -8,27 +8,41 @@
 <title>Baby Block Blast</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧸</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Modak&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#e09fb3; --ink:#5a3b2a; --soft:#8f6f59; --board:#d8bd9a; --cell:#ebd8bc; --card:#f9dee5; --accent:#d98c6b;
+  /* page + surfaces */
+  --bg:#f7ecdc; --glow1:#fff6e6; --glow2:#f3d9bd; --card:#fff8ec;
+  /* text */
+  --ink:#5a3b2a; --soft:#8f6f59;
+  /* board */
+  --board:#d8bd9a; --cell:#ebd8bc;
+  /* pink (titles, buttons, score numbers) */
+  --pink:#ff8ec7; --pink-dark:#f0549c; --accent:#f26aa8; --accent-dark:#c94887;
+  /* fonts */
+  --font-title:'Modak','Baloo 2',ui-rounded,system-ui,sans-serif;
+  --font-body:'Baloo 2',ui-rounded,'Nunito',system-ui,sans-serif;
+  /* the six block colors */
   --c1:#d98c6b; --c2:#e6b85c; --c3:#9db38a; --c4:#d9a0a0; --c5:#b6a1c8; --c6:#8eb4c0;
   --bw:max(250px,min(92vw,410px,calc(100dvh - 340px)));
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;height:100%}
 body{
-  font-family:'Fredoka',ui-rounded,'Nunito',system-ui,sans-serif;color:var(--ink);
-  background:radial-gradient(circle at 20% 10%,#fff6e6 0,transparent 45%),radial-gradient(circle at 85% 90%,#f3d9bd 0,transparent 50%),var(--bg);
+  font-family:var(--font-body);color:var(--ink);
+  background:radial-gradient(circle at 20% 10%,var(--glow1) 0,transparent 45%),radial-gradient(circle at 85% 90%,var(--glow2) 0,transparent 50%),var(--bg);
   user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;touch-action:manipulation;overflow-x:hidden;
 }
 #app{max-width:460px;margin:0 auto;min-height:100dvh;padding:calc(10px + env(safe-area-inset-top)) 14px calc(14px + env(safe-area-inset-bottom));display:flex;flex-direction:column;align-items:center;gap:10px}
-.title{margin:2px 0 0;font-size:26px;font-weight:700;letter-spacing:.5px;cursor:pointer;text-align:center}
-.title .w1{color:#c9714f}.title .w2{color:#c89530}.title .w3{color:#7a9567}
+.title{margin:2px 0 0;font-family:var(--font-title);font-weight:400;font-size:28px;line-height:1.15;letter-spacing:1px;cursor:pointer;text-align:center}
+.title .emo{-webkit-text-stroke:0}
+.word{display:inline-block;white-space:nowrap}
+.bub{display:inline-block;position:relative;color:var(--pink);-webkit-text-stroke:.12em var(--pink-dark);paint-order:stroke fill;transform:translateY(var(--y,0)) rotate(var(--r,0deg))}
+.bub::after{content:'';position:absolute;left:.2em;top:.2em;width:.08em;height:.26em;border-radius:99px;background:rgba(255,255,255,.85);transform:rotate(8deg);-webkit-text-stroke:0}
 .stats{display:flex;gap:10px;width:var(--bw);align-items:stretch}
 .stat{flex:1;background:var(--card);border-radius:18px;padding:6px 14px;box-shadow:0 3px 0 rgba(120,80,40,.15),inset 0 0 0 2px rgba(216,189,154,.5)}
 .stat small{display:block;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--soft)}
-.stat b{font-size:26px;line-height:1.1;display:inline-block}
+.stat b{font-family:var(--font-title);font-weight:400;font-size:28px;line-height:1.1;display:inline-block;color:var(--pink);-webkit-text-stroke:.1em var(--pink-dark);paint-order:stroke fill}
 .bump{animation:bump .25s}
 #mute{width:54px;border:0;border-radius:18px;background:var(--card);font-size:22px;cursor:pointer;box-shadow:0 3px 0 rgba(120,80,40,.15),inset 0 0 0 2px rgba(216,189,154,.5)}
 .board-wrap{position:relative;width:var(--bw)}
@@ -49,20 +63,24 @@ body{
 .piece{display:grid}
 .floating{position:fixed;left:0;top:0;z-index:50;pointer-events:none;filter:drop-shadow(0 10px 8px rgba(90,59,42,.3));will-change:transform}
 .overlay{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;padding:20px;z-index:30;background:rgba(90,59,42,.45);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
-#intro{z-index:20;background:radial-gradient(circle at 20% 10%,#fff6e6 0,transparent 50%),radial-gradient(circle at 85% 90%,#f3d9bd 0,transparent 55%),var(--bg);backdrop-filter:none;-webkit-backdrop-filter:none}
+#intro{z-index:20;background:radial-gradient(circle at 20% 10%,var(--glow1) 0,transparent 50%),radial-gradient(circle at 85% 90%,var(--glow2) 0,transparent 55%),var(--bg);backdrop-filter:none;-webkit-backdrop-filter:none}
 .hidden{display:none!important}
 .card{background:var(--card);border-radius:30px;padding:26px 24px;max-width:360px;width:100%;text-align:center;box-shadow:0 10px 0 rgba(120,80,40,.2);animation:popin .35s cubic-bezier(.2,1.4,.4,1)}
 .card .emoji{font-size:54px;line-height:1}
-.card h2{margin:10px 0 6px;font-size:26px}
+.card h2{margin:10px 0 6px;font-family:var(--font-title);font-weight:400;font-size:32px;line-height:1.1;color:var(--pink);-webkit-text-stroke:.1em var(--pink-dark);paint-order:stroke fill;letter-spacing:1px}
 .card p{margin:0 0 18px;color:var(--soft);font-size:17px;line-height:1.45;white-space:pre-line}
 .card img{max-width:100%;max-height:220px;border-radius:18px;margin-bottom:14px}
-.card .big{font-size:40px;line-height:1.05;margin:4px 0 10px}
-.card .hb{font-size:22px;font-weight:600;margin:0 0 8px}
-.btn{border:0;font:inherit;font-weight:600;font-size:19px;color:#fff;background:var(--accent);padding:12px 30px;border-radius:999px;cursor:pointer;box-shadow:0 5px 0 #b86c4d}
-.btn:active{transform:translateY(3px);box-shadow:0 2px 0 #b86c4d}
+.card .big{font-size:46px;line-height:1.1;margin:4px 0 8px}
+.card .hb{font-family:var(--font-title);font-weight:400;font-size:24px;line-height:1.2;margin:0 0 12px}
+.btn{border:0;font:inherit;font-weight:700;font-size:20px;color:#fff;background:var(--accent);padding:12px 32px;border-radius:999px;cursor:pointer;box-shadow:0 5px 0 var(--accent-dark)}
+.btn:active{transform:translateY(3px);box-shadow:0 2px 0 var(--accent-dark)}
 .deco{display:flex;justify-content:center;gap:7px;margin-bottom:14px}
 .deco i{width:30px;height:30px;border-radius:9px;display:block;box-shadow:inset 0 -4px 0 rgba(0,0,0,.13),inset 0 3px 0 rgba(255,255,255,.35);animation:float 2.4s ease-in-out infinite}
 .deco i:nth-child(2){animation-delay:.2s}.deco i:nth-child(3){animation-delay:.4s}.deco i:nth-child(4){animation-delay:.6s}.deco i:nth-child(5){animation-delay:.8s}.deco i:nth-child(6){animation-delay:1s}
+.intro-img,.intro-ph{display:block;margin:4px auto 16px;width:100%;max-width:240px;border-radius:22px;border:4px solid #fff;box-shadow:0 6px 0 rgba(120,80,40,.18);transform:rotate(-2deg)}
+.intro-img{max-height:220px;object-fit:cover}
+.intro-ph{aspect-ratio:4/3;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;background:rgba(255,142,199,.15);border:3px dashed var(--pink-dark);color:var(--soft);font-size:15px}
+.intro-ph b{font-size:34px;font-weight:400}
 #confetti{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:60}
 @keyframes popin{from{transform:scale(.8);opacity:0}to{transform:scale(1);opacity:1}}
 @keyframes bump{0%{transform:scale(1)}50%{transform:scale(1.25)}100%{transform:scale(1)}}
@@ -75,7 +93,7 @@ body{
 <body>
 
 <div id="app">
-  <h1 class="title">🧸 <span class="w1">Baby</span> <span class="w2">Block</span> <span class="w3">Blast</span></h1>
+  <h1 class="title"><span class="emo">🧸</span> <span class="wob">Baby Block Blast</span></h1>
   <div class="stats">
     <div class="stat"><small>Score</small><b id="score">0</b></div>
     <div class="stat"><small>Best</small><b id="best">0</b></div>
@@ -88,8 +106,10 @@ body{
 <div id="intro" class="overlay">
   <div class="card">
     <div class="deco"><i class="c1"></i><i class="c2"></i><i class="c3"></i><i class="c4"></i><i class="c5"></i><i class="c6"></i></div>
-    <h1 class="title big"><span class="w1">Baby</span> <span class="w2">Block</span> <span class="w3">Blast</span></h1>
-    <p class="hb" id="introHello"></p>
+    <h1 class="title big"><span class="wob">Baby Block Blast</span></h1>
+    <p class="hb"><span class="wob" id="introHello"></span> 🎉</p>
+    <img id="introImg" class="intro-img hidden" alt="">
+    <div id="introPh" class="intro-ph"><b>📸</b>your photo goes here</div>
     <p id="introNote"></p>
     <button class="btn" id="playBtn">Play 🧸</button>
   </div>
@@ -118,7 +138,10 @@ body{
    ============================================================ */
 const CONFIG = {
   name: 'my love',
-  introNote: "I made you a little game, because you deserve something as fun as you are 🤍",
+  // Photo on the start screen. Put the picture in the repo (e.g. a photos/ folder) and set its path, like 'photos/us.jpg'.
+  // Leave it '' to show a dashed "your photo goes here" box instead.
+  introImage: '',
+  introNote: "I made you a little game, because you deserve something as fun as you are.\nClear lines, unlock memories, and see what's waiting at the end. 💛",
   milestones: [
     { score: 100, emoji: '📸', title: 'Memory #1', text: 'Placeholder: the day we met.\nReplace this with a real memory (and add a photo!).', image: '' },
     { score: 250, emoji: '🍜', title: 'Memory #2', text: 'Placeholder: our first date.\nWrite something sweet here.', image: '' },
@@ -138,14 +161,45 @@ const CONFIG = {
 
 /* ---------------- setup ---------------- */
 const N = 8;
-const COLORS = ['#d98c6b', '#e6b85c', '#9db38a', '#d9a0a0', '#b6a1c8', '#8eb4c0'];
+const COLORS = ['#d98c6b', '#e6b85c', '#9db38a', '#d9a0a0', '#b6a1c8', '#8eb4c0', '#ff8ec7'];
 const $ = s => document.querySelector(s);
 const boardEl = $('#board'), trayEl = $('#tray'), toastEl = $('#toast');
 const slots = [...trayEl.children];
 const scoreEl = $('#score'), bestEl = $('#best');
 
-$('#introHello').textContent = `Happy Birthday, ${CONFIG.name}! 🎉`;
+$('#introHello').textContent = `Happy Birthday, ${CONFIG.name}!`;
 $('#introNote').textContent = CONFIG.introNote;
+
+/* wobbly bubble letters: every letter gets its own tilt (R, degrees) and bounce (Y, in 1/25 em). Edit these numbers to taste. */
+function wobble(el) {
+  const R = [-6, 4, -3, 6, -5, 3, -4, 5], Y = [0, -3, 2, -2, 3, -1, 2, -3];
+  const text = el.textContent;
+  el.textContent = '';
+  el.setAttribute('aria-label', text);
+  let i = 0;
+  text.split(' ').forEach((word, wi, arr) => {
+    const w = document.createElement('span');
+    w.className = 'word'; w.setAttribute('aria-hidden', 'true');
+    for (const ch of word) {
+      const s = document.createElement('span');
+      s.className = 'bub'; s.textContent = ch;
+      s.style.setProperty('--r', R[i % R.length] + 'deg');
+      s.style.setProperty('--y', (Y[i % Y.length] * 0.04) + 'em');
+      i++; w.appendChild(s);
+    }
+    el.appendChild(w);
+    if (wi < arr.length - 1) el.appendChild(document.createTextNode(' '));
+  });
+}
+document.querySelectorAll('.wob').forEach(wobble);
+
+const introImg = $('#introImg'), introPh = $('#introPh');
+if (CONFIG.introImage) {
+  introImg.onerror = () => { introImg.classList.add('hidden'); introPh.classList.remove('hidden'); };
+  introImg.src = CONFIG.introImage;
+  introImg.classList.remove('hidden');
+  introPh.classList.add('hidden');
+}
 
 const cells = [];
 for (let i = 0; i < N * N; i++) { const d = document.createElement('div'); d.className = 'cell'; boardEl.appendChild(d); cells.push(d); }
